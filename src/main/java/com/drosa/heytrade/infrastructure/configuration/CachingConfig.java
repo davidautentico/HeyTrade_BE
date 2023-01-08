@@ -12,6 +12,10 @@ public class CachingConfig {
 
   @Bean
   public CacheManager cacheManager() {
-    return new ConcurrentMapCacheManager("pokemons", "pokemon-favourites");
+    return new ConcurrentMapCacheManager(
+        CacheNames.POKEMON_CACHE,
+        CacheNames.POKEMON_PAGEABLE_LIST_CACHE,
+        CacheNames.POKEMON_FAVOURITES_PAGEABLE_LIST_CACHE
+    );
   }
 }

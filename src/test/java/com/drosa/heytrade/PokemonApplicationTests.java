@@ -43,13 +43,19 @@ import org.testcontainers.junit.jupiter.Testcontainers;
     webEnvironment = RANDOM_PORT,
     classes = TestApplication.class
 )
-public class PokemonApplicationIntegrationTests {
+public class PokemonApplicationTests {
 
-  private static final String POKEMON_NAME_1 = "POKEMON NAME 1";
+  private static final String POKEMON_NAME_1 = "ABRA";
 
-  private static final String POKEMON_NAME_2 = "POKEMON NAME 2";
+  private static final String POKEMON_NAME_1_SUFFIX_2 = "AB";
 
-  private static final String POKEMON_NAME_3 = "POKEMON NAME 3";
+  private static final String POKEMON_NAME_2 = "ABSOL";
+
+  private static final String POKEMON_NAME_2_SUFFIX_2 = "AB";
+
+  private static final String POKEMON_NAME_3 = "PIKACHU";
+
+  private static final String POKEMON_NAME_3_SUFFIX_2 = "PI";
 
   private static final Integer POKEMON_NUMBER_1 = 1;
 
@@ -181,6 +187,87 @@ public class PokemonApplicationIntegrationTests {
 
     assertThat(page.getTotalElements()).isEqualTo(2);
     assertTrue(page.stream().toList().containsAll(List.of(pokemonMapper.fromEntity(pokemon1), pokemonMapper.fromEntity(pokemon2))));
+  }
+
+  @Test
+  @DisplayName("Call for all pokemons with a name started with text")
+  @SneakyThrows
+  public void whenCallForAllPokemonsStartedWithName_shouldReturnCorrectListOk() {
+    // given
+    pokemonRepository.deleteAll();
+    var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.FALSE);
+    var savedPokemon1 = pokemonRepository.save(pokemon1);
+    var pokemon2 = getPokemon(POKEMON_NAME_2, POKEMON_NUMBER_2, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
+    var savedPokemon2 = pokemonRepository.save(pokemon2);
+    var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
+    var savedPokemon3 = pokemonRepository.save(pokemon2);
+    var url = PokemonController.path + "/search?text=" + POKEMON_NAME_2_SUFFIX_2;
+
+    // call
+    ResponseEntity<String> responseEntity =
+        restTemplate.getForEntity(url, String.class);
+
+    // verify
+    Page<PokemonDetailsDTO> page = objectMapper.readValue(responseEntity.getBody(),
+        new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
+        });
+
+    assertThat(page.getTotalElements()).isEqualTo(2);
+    assertTrue(page.stream().toList().containsAll(List.of(pokemonMapper.fromEntity(pokemon1), pokemonMapper.fromEntity(pokemon2))));
+  }
+
+  @Test
+  @DisplayName("Call for all pokemons with the given type")
+  @SneakyThrows
+  public void whenCallForAllPokemonsWithGivenType_shouldReturnCorrectListOk() {
+    // given
+    pokemonRepository.deleteAll();
+    var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.FALSE);
+    var savedPokemon1 = pokemonRepository.save(pokemon1);
+    var pokemon2 = getPokemon(POKEMON_NAME_2, POKEMON_NUMBER_2, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
+    var savedPokemon2 = pokemonRepository.save(pokemon2);
+    var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
+    var savedPokemon3 = pokemonRepository.save(pokemon3);
+    var url = PokemonController.path + "/search?pokemonType=" + POKEMON_TYPE_1;
+
+    // call
+    ResponseEntity<String> responseEntity =
+        restTemplate.getForEntity(url, String.class);
+
+    // verify
+    Page<PokemonDetailsDTO> page = objectMapper.readValue(responseEntity.getBody(),
+        new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
+        });
+
+    assertThat(page.getTotalElements()).isEqualTo(1);
+    assertTrue(page.stream().toList().contains(pokemonMapper.fromEntity(pokemon1)));
+  }
+
+  @Test
+  @DisplayName("Call for all pokemons with the given type")
+  @SneakyThrows
+  public void whenCallForAllPokemonsWithGivenTextAndType_shouldReturnCorrectListOk() {
+    // given
+    pokemonRepository.deleteAll();
+    var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.FALSE);
+    var savedPokemon1 = pokemonRepository.save(pokemon1);
+    var pokemon2 = getPokemon(POKEMON_NAME_2, POKEMON_NUMBER_2, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
+    var savedPokemon2 = pokemonRepository.save(pokemon2);
+    var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
+    var savedPokemon3 = pokemonRepository.save(pokemon3);
+    var url = PokemonController.path + "/search?text=" + POKEMON_NAME_1_SUFFIX_2 +"&pokemonType=" + POKEMON_TYPE_3;
+
+    // call
+    ResponseEntity<String> responseEntity =
+        restTemplate.getForEntity(url, String.class);
+
+    // verify
+    Page<PokemonDetailsDTO> page = objectMapper.readValue(responseEntity.getBody(),
+        new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
+        });
+
+    assertThat(page.getTotalElements()).isEqualTo(1);
+    assertTrue(page.stream().toList().contains(pokemonMapper.fromEntity(pokemon2)));
   }
 
   @Test

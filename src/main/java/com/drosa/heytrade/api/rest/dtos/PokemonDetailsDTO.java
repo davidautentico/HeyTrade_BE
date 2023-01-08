@@ -1,28 +1,59 @@
 package com.drosa.heytrade.api.rest.dtos;
 
-import java.util.Arrays;
+import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
-import com.drosa.heytrade.domain.entities.Pokemon;
+import javax.validation.constraints.NotNull;
 import lombok.Builder;
-import org.apache.logging.log4j.util.Strings;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
-public class PokemonDetailsDTO {
+@Getter
+@Setter
+@EqualsAndHashCode
+public class PokemonDetailsDTO implements Serializable {
 
-  private final UUID id;
+  @NotNull
+  private UUID id;
 
-  private final int number;
+  private int number;
 
-  private final String name;
+  @NotNull
+  private String name;
 
-  private final int combatPower;
+  private boolean favourite;
 
-  private final int hitPoints;
+  private int combatPower;
 
-  private final String pokemonTypeLine;
+  private int hitPoints;
 
-  private final String weighRangeLine;
+  @NotNull
+  private String pokemonTypeLine;
 
-  private final String heighRangeLine;
+  @NotNull
+  private String weighRangeLine;
+
+  @NotNull
+  private String heighRangeLine;
+
+  private List<PokemonDetailsDTO> evolutions;
+
+  public PokemonDetailsDTO(UUID id, int number, String name, Boolean favourite, int combatPower, int hitPoints, String pokemonTypeLine, String weighRangeLine,
+      String heighRangeLine, List<PokemonDetailsDTO> evolutions){
+    this.id = id;
+    this.number = number;
+    this.name = name;
+    this.favourite = favourite;
+    this.combatPower = combatPower;
+    this.hitPoints = hitPoints;
+    this.pokemonTypeLine = pokemonTypeLine;
+    this.weighRangeLine = weighRangeLine;
+    this.heighRangeLine = heighRangeLine;
+    this.evolutions = evolutions;
+  }
+
+  public PokemonDetailsDTO(){}
 }

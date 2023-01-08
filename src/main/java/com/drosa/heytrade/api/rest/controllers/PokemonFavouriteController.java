@@ -1,4 +1,4 @@
-package com.drosa.heytrade.api.rest;
+package com.drosa.heytrade.api.rest.controllers;
 
 import java.util.UUID;
 
