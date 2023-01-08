@@ -8,6 +8,7 @@ import com.drosa.heytrade.api.rest.mappers.PokemonMapper;
 import com.drosa.heytrade.domain.usecases.GetAllPokemonsUseCase;
 import com.drosa.heytrade.domain.usecases.GetPokemonUseCase;
 import com.drosa.heytrade.domain.usecases.GetPokemonsByFilterUseCase;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(PokemonController.path)
+@RequestMapping(PokemonController.PATH)
 public class PokemonController {
 
-  public static final String path = "/heytrade/api/v1/pokemons";
+  public static final String PATH = "/heytrade/api/v1/pokemons";
 
   private final GetAllPokemonsUseCase getAllPokemonsUseCase;
 
@@ -65,21 +67,6 @@ public class PokemonController {
     return new ResponseEntity<>(pokemonMapper.fromEntity(getPokemonUseCase.dispatch(pokemonId)), HttpStatus.OK);
   }
 
-  /*@GetMapping(value = "/", produces = "application/json")
-  @ResponseBody
-  public ResponseEntity<Page<PokemonDetailsDTO>> findPokemonByTextAndType(
-      @RequestParam(value = "text", required = false) String text,
-      @RequestParam(value = "pokemon-type", required = false) PokemonType pokemonType,
-      @RequestParam(value = "favourite", required = false) Boolean favourite,
-      @PageableDefault(size = 20) Pageable page) {
-    log.info("[Retrieve pokemons by text and type request received] text <{}>, type {}", text, pokemonType);
-
-    var pokemonDetailsDTOPage = getPokemonsByTextAndTypeUseCase.dispatch(text, pokemonType, favourite, page)
-        .map(pokemonMapper::fromEntity);
-
-    return new ResponseEntity<>(pokemonDetailsDTOPage, HttpStatus.OK);
-  }*/
-
   @GetMapping(value = "/search", produces = "application/json")
   @ResponseBody
   public ResponseEntity<Page<PokemonDetailsDTO>> findPokemonByFilter(
@@ -92,6 +79,7 @@ public class PokemonController {
                 page)
             .map(pokemonMapper::fromEntity);
 
+    log.info("[Retrieve pokemons by filter request received] before response <{}>", searchRequestDTO);
     return new ResponseEntity<>(pokemonDetailsDTOPage, HttpStatus.OK);
   }
 

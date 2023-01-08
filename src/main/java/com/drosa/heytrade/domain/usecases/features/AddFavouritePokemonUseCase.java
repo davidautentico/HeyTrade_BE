@@ -1,4 +1,4 @@
-package com.drosa.heytrade.domain.usecases;
+package com.drosa.heytrade.domain.usecases.features;
 
 import java.util.UUID;
 

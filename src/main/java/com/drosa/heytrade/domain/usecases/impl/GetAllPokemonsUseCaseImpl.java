@@ -12,13 +12,17 @@ import org.springframework.data.domain.Pageable;
 @UseCase
 public class GetAllPokemonsUseCaseImpl implements GetAllPokemonsUseCase {
 
+  public static final String KEY = "filterAllCacheKey";
+
   private final PokemonRepository pokemonRepository;
 
   public GetAllPokemonsUseCaseImpl(final PokemonRepository pokemonRepository) {
     this.pokemonRepository = pokemonRepository;
   }
 
-  @Cacheable(cacheNames = CacheNames.POKEMON_PAGEABLE_LIST_CACHE, key = "{ #root.targetClass, #page }")
+  @Cacheable(cacheNames = CacheNames.POKEMON_PAGEABLE_LIST_CACHE,
+      key = "{#root.target.KEY, #page}"
+  )
   public Page<Pokemon> dispatch(final Pageable page){
     return pokemonRepository.findAll(page);
   }

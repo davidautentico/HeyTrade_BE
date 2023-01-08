@@ -1,9 +1,7 @@
 package com.drosa.heytrade.domain.entities;
 
 import javax.persistence.Embeddable;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 
 @Data

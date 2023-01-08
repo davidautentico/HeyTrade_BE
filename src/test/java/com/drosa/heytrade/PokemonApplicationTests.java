@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.drosa.heytrade.api.rest.controllers.PokemonController;
-import com.drosa.heytrade.api.rest.controllers.PokemonFavouriteController;
+import com.drosa.heytrade.api.rest.controllers.features.PokemonFavouriteFeatureController;
 import com.drosa.heytrade.api.rest.dtos.PokemonDetailsDTO;
 import com.drosa.heytrade.api.rest.mappers.PokemonMapper;
 import com.drosa.heytrade.configuration.RestPageImpl;
@@ -20,21 +20,21 @@ import com.drosa.heytrade.domain.repositories.PokemonRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(
     properties = {
         "spring.jpa.generate-ddl=true",
@@ -86,41 +86,41 @@ public class PokemonApplicationTests {
   }
 
   @Test
-  @DisplayName("Non favourite entity set as favourite should be persisted as favourite")
+  @DisplayName("Set a pokemon as favourite, it should be persisted as favourite")
   public void whenPokemonIsSetFavourite_shouldSaveItAsFavourite() {
     // given
     var pokemon = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.FALSE);
     var savedPokemon = pokemonRepository.save(pokemon);
-    var url = PokemonFavouriteController.path + "/" + savedPokemon.getId();
+    var url = PokemonFavouriteFeatureController.PATH + "/" + savedPokemon.getId();
 
     // call
     restTemplate.put(url, null);
 
     // verify
     var favouritePokemon = pokemonRepository.findById(savedPokemon.getId());
-    assertNotNull(favouritePokemon.get());
+    assertTrue(favouritePokemon.isPresent());
     assertThat(favouritePokemon.get().getFavourite()).isEqualTo(true);
   }
 
   @Test
-  @DisplayName("Favourite entity removed as favourite should be persisted as not favourite")
+  @DisplayName("Remove a favourite pokemon as favourite, it should be persisted as not favourite")
   public void whenPokemonIsRemovedAsFavourite_shouldSavedItAsNotFavourite() {
     // given
     var pokemon = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.TRUE);
     var savedPokemon = pokemonRepository.save(pokemon);
-    var url = PokemonFavouriteController.path + "/" + savedPokemon.getId();
+    var url = PokemonFavouriteFeatureController.PATH + "/" + savedPokemon.getId();
 
     // call
     restTemplate.delete(url);
 
     // verify
     var nonFavouritePokemon = pokemonRepository.findById(savedPokemon.getId());
-    assertNotNull(nonFavouritePokemon.get());
+    assertTrue(nonFavouritePokemon.isPresent());
     assertThat(nonFavouritePokemon.get().getFavourite()).isEqualTo(false);
   }
 
   @Test
-  @DisplayName("Favourite entity removed as favourite should be persisted as not favourite")
+  @DisplayName("Call for all favourites, it should return the correct list and status ok")
   @SneakyThrows
   public void whenCallForAllFavourites_shouldReturnAllFavourites() {
     // given
@@ -131,7 +131,7 @@ public class PokemonApplicationTests {
     var savedPokemon2 = pokemonRepository.save(pokemon2);
     var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_3, null, Boolean.TRUE);
     var savedPokemon3 = pokemonRepository.save(pokemon3);
-    var url = PokemonFavouriteController.path + "/";
+    var url = PokemonController.PATH + "/search?favourite=true";
 
     // call
     ResponseEntity<String> responseEntity =
@@ -142,16 +142,18 @@ public class PokemonApplicationTests {
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
         });
 
+    assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(1);
     assertTrue(page.stream().toList().contains(pokemonMapper.fromEntity(pokemon3)));
   }
 
   @Test
+  @DisplayName("Call for an existing pokemn, it should return the correct one and status ok")
   public void whenCallForExistingPokemon_shouldReturnOK() {
     // given
     var pokemon = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.TRUE);
     var savedPokemon = pokemonRepository.save(pokemon);
-    var url = PokemonController.path + "/" + savedPokemon.getId();
+    var url = PokemonController.PATH + "/" + savedPokemon.getId();
 
     // call
     ResponseEntity<PokemonDetailsDTO> responseEntity =
@@ -165,16 +167,16 @@ public class PokemonApplicationTests {
   }
 
   @Test
-  @DisplayName("Non favourite entity set as favourite should be persisted as favourite")
+  @DisplayName("Call for all pokemons, it should return the full collection and status ok")
   @SneakyThrows
   public void whenCallForAllPokemons_shouldReturnOk() {
     // given
     pokemonRepository.deleteAll();
-    var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.FALSE);
+    var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.TRUE);
     var savedPokemon1 = pokemonRepository.save(pokemon1);
     var pokemon2 = getPokemon(POKEMON_NAME_2, POKEMON_NUMBER_2, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
     var savedPokemon2 = pokemonRepository.save(pokemon2);
-    var url = PokemonController.path + "/";
+    var url = PokemonController.PATH + "/";
 
     // call
     ResponseEntity<String> responseEntity =
@@ -185,12 +187,13 @@ public class PokemonApplicationTests {
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
         });
 
+    assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(2);
     assertTrue(page.stream().toList().containsAll(List.of(pokemonMapper.fromEntity(pokemon1), pokemonMapper.fromEntity(pokemon2))));
   }
 
   @Test
-  @DisplayName("Call for all pokemons with a name started with text")
+  @DisplayName("Call for all pokemons that start with a given name, it should return the full matching collection and status ok")
   @SneakyThrows
   public void whenCallForAllPokemonsStartedWithName_shouldReturnCorrectListOk() {
     // given
@@ -201,7 +204,7 @@ public class PokemonApplicationTests {
     var savedPokemon2 = pokemonRepository.save(pokemon2);
     var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
     var savedPokemon3 = pokemonRepository.save(pokemon2);
-    var url = PokemonController.path + "/search?text=" + POKEMON_NAME_2_SUFFIX_2;
+    var url = PokemonController.PATH + "/search?text=" + POKEMON_NAME_2_SUFFIX_2;
 
     // call
     ResponseEntity<String> responseEntity =
@@ -212,12 +215,13 @@ public class PokemonApplicationTests {
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
         });
 
+    assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(2);
     assertTrue(page.stream().toList().containsAll(List.of(pokemonMapper.fromEntity(pokemon1), pokemonMapper.fromEntity(pokemon2))));
   }
 
   @Test
-  @DisplayName("Call for all pokemons with the given type")
+  @DisplayName("Call for all pokemons with a given type, it should return the full matching collection and status ok")
   @SneakyThrows
   public void whenCallForAllPokemonsWithGivenType_shouldReturnCorrectListOk() {
     // given
@@ -228,7 +232,7 @@ public class PokemonApplicationTests {
     var savedPokemon2 = pokemonRepository.save(pokemon2);
     var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
     var savedPokemon3 = pokemonRepository.save(pokemon3);
-    var url = PokemonController.path + "/search?pokemonType=" + POKEMON_TYPE_1;
+    var url = PokemonController.PATH + "/search?pokemonType=" + POKEMON_TYPE_1;
 
     // call
     ResponseEntity<String> responseEntity =
@@ -239,12 +243,13 @@ public class PokemonApplicationTests {
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
         });
 
+    assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(1);
     assertTrue(page.stream().toList().contains(pokemonMapper.fromEntity(pokemon1)));
   }
 
   @Test
-  @DisplayName("Call for all pokemons with the given type")
+  @DisplayName("Call for all pokemons with a given type and text, it should return the full matching collection and status ok")
   @SneakyThrows
   public void whenCallForAllPokemonsWithGivenTextAndType_shouldReturnCorrectListOk() {
     // given
@@ -255,7 +260,7 @@ public class PokemonApplicationTests {
     var savedPokemon2 = pokemonRepository.save(pokemon2);
     var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
     var savedPokemon3 = pokemonRepository.save(pokemon3);
-    var url = PokemonController.path + "/search?text=" + POKEMON_NAME_1_SUFFIX_2 +"&pokemonType=" + POKEMON_TYPE_3;
+    var url = PokemonController.PATH + "/search?text=" + POKEMON_NAME_1_SUFFIX_2 + "&pokemonType=" + POKEMON_TYPE_3;
 
     // call
     ResponseEntity<String> responseEntity =
@@ -266,14 +271,16 @@ public class PokemonApplicationTests {
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
         });
 
+    assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(1);
     assertTrue(page.stream().toList().contains(pokemonMapper.fromEntity(pokemon2)));
   }
 
   @Test
+  @DisplayName("Call for a single pokemon with a wrong UUID it should return bad request")
   public void whenCallForNonUUIDPokemonId_shouldReturnBadRequest() {
 
-    var url = PokemonController.path + "/" + "1234-4567-2345-1234";
+    var url = PokemonController.PATH + "/" + "1234-4567-2345-1234";
     ResponseEntity<PokemonDetailsDTO> responseEntity =
         restTemplate.getForEntity(url, PokemonDetailsDTO.class);
 
@@ -281,13 +288,25 @@ public class PokemonApplicationTests {
   }
 
   @Test
+  @DisplayName("Call for a single pokemon that not exists it should return not found")
   public void whenCallFoNonExistingPokemon_shouldReturnNotFound() {
 
-    var url = PokemonController.path + "/" + UUID.randomUUID();
+    var url = PokemonController.PATH + "/" + UUID.randomUUID();
 
     ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  @DisplayName("Call for search using a wrong filter it should return bad request")
+  public void whenCallFoNonExistingFilter_shouldReturnNotFound() {
+
+    var url = PokemonController.PATH + "/search?anothervariable=" + UUID.randomUUID();
+
+    ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+
+    assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
   private Pokemon getPokemon(String name, Integer number, PokemonType pokemonType1, PokemonType pokemonType2, Boolean isFavourite) {

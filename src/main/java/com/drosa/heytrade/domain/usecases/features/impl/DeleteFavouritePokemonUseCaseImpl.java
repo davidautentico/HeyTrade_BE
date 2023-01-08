@@ -1,11 +1,11 @@
-package com.drosa.heytrade.domain.usecases.impl;
+package com.drosa.heytrade.domain.usecases.features.impl;
 
 import java.util.UUID;
 
 import com.drosa.heytrade.domain.entities.Pokemon;
 import com.drosa.heytrade.domain.exceptions.PokemonNotFoundException;
 import com.drosa.heytrade.domain.repositories.PokemonRepository;
-import com.drosa.heytrade.domain.usecases.DeleteFavouritePokemonUseCase;
+import com.drosa.heytrade.domain.usecases.features.DeleteFavouritePokemonUseCase;
 import com.drosa.heytrade.domain.usecases.stereotypes.UseCase;
 import com.drosa.heytrade.infrastructure.configuration.CacheNames;
 import org.springframework.cache.annotation.CacheEvict;
