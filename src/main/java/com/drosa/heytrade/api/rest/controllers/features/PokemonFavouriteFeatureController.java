@@ -43,7 +43,7 @@ public class PokemonFavouriteFeatureController {
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void removeFavouritePokemon(@PathVariable("id") final UUID pokemonId) {
-    log.info("[Remove pokemon to favourites request received] pokemon <{}>", pokemonId);
+    log.info("[Remove pokemon from favourites request received] pokemon <{}>", pokemonId);
 
     deleteFavouritePokemonUseCase.dispatch(pokemonId);
   }

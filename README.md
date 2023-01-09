@@ -1,25 +1,47 @@
 <img src="./images/logo.sample.png" alt="Logo of the project" align="right">
 
-# Name of the project &middot; [![Build Status](https://img.shields.io/travis/npm/npm/latest.svg?style=flat-square)](https://travis-ci.org/npm/npm) [![npm](https://img.shields.io/npm/v/npm.svg?style=flat-square)](https://www.npmjs.com/package/npm) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/your/your-project/blob/master/LICENSE)
+# HeyTrade BE &middot; [![Build Status](https://img.shields.io/travis/npm/npm/latest.svg?style=flat-square)](https://travis-ci.org/npm/npm) [![npm](https://img.shields.io/npm/v/npm.svg?style=flat-square)](https://www.npmjs.com/package/npm) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/your/your-project/blob/master/LICENSE)
 > Additional information or tag line
 
-A brief description of your project, what it is used for.
+Small Pokedex Rest API
 
 ## Installing / Getting started
 
-A quick introduction of the minimal setup you need to get a hello world up &
-running.
+The project language is java +8-11.
+Maven framework has been used in order to build it.
+A docker-compose file has been provided. That file contains two services:
+- MySql 5.7
+- Spring boot app
+
+In order to build the project, java 17 and maven 3.8 is needed.
 
 ```shell
-commands here
+mvn clean package
+docker-compose up
 ```
 
-Here you should say what actually happens when you execute the code above.
+Executing the code above a spring-boot instance will start using a Mysql database as a backend.
+
+```shell
+mvn clean tests
+```
+
+Executing the code above the test suite is launched. For integration/e2e tests the TestContainers library has been used.
+
+```shell
+docker-compose down --rmi all -v --remove-orphans
+```
+
+The command above cleans all containers, images, volumes, networks, and undefined containers created with docker-compose
 
 ## Developing
 
 ### Built With
-List main libraries, frameworks used including versions (React, Angular etc...)
+- java 17
+- Maven 3.8
+- Spring Boot 2.7
+- TestContainers 1.17
+- Jpa
 
 ### Prerequisites
 What is needed to set up the dev environment. For instance, global dependencies or any other tools. include download links.
@@ -27,58 +49,51 @@ What is needed to set up the dev environment. For instance, global dependencies 
 
 ### Setting up Dev
 
-Here's a brief intro about what a developer must do in order to start developing
-the project further:
+In order to be able to recreate the dev environment:
 
 ```shell
-git clone https://github.com/your/your-project.git
-cd your-project/
-packagemanager install
+git clone https://github.com/davidautentico/HeyTrade_BE.git
+cd HeyTrade_BE/
 ```
+Furthermore, the dev machine should have this libraries:
 
-And state what happens step-by-step. If there is any virtual environment, local server or database feeder needed, explain here.
+- docker
+- java 17
+- maven 3.8
 
 ### Building
 
-If your project needs some additional steps for the developer to build the
-project after some code changes, state them here. for example:
+The code below should build the project. This has to be executed in the root project path.
 
 ```shell
-./configure
-make
-make install
+mvn clean package
 ```
-
-Here again you should state what actually happens when the code above gets
-executed.
 
 ### Deploying / Publishing
-give instructions on how to build and release a new version
-In case there's some step you have to take that publishes this project to a
-server, this is the right time to state it.
+A dockerfile and a docker-compose files have been provided in order to deploy the project.
+The code below should start the containers with the app and the mysql instance. This has to be executed in the root project path.
 
 ```shell
-packagemanager deploy your-project -s server.com -u username -p password
+docker-compose up
 ```
 
-And again you'd need to tell what the previous code actually does.
+This code will start containers with the spring boot app running at port 8080 and a Mysql 5.7 as a backend database.
 
-## Versioning
-
-We can maybe use [SemVer](http://semver.org/) for versioning. For the versions available, see the [link to tags on this repository](/tags).
-
-
-## Configuration
-
-Here you should write what are all of the configurations a user can enter when using the project.
 
 ## Tests
 
-Describe and show how to run the tests with code examples.
-Explain what these tests test and why.
+Some integration/e2e tests have been provided. They are located in class PokemonApplicationIntegrationTests.
+These tests try to test the api funcionality:
+- Retrieve all pokemons
+- Retrieve all favourite pokemons
+- Retrieve one single pokemon
+- Add a pokemon to favourites
+- Remove a pokemon from favourites.
+- Search pokemons by text
+- Search pokemons by type
 
 ```shell
-Give an example
+mvn clean test
 ```
 
 ## Style guide
@@ -92,9 +107,9 @@ If the api is external, link to api documentation. If not describe your api incl
 
 ## Database
 
-Explaining what database (and version) has been used. Provide download links.
-Documents your database design and schemas, relations etc...
+The database used is a RDMS system. A MySql 5.7 instance. 
+In any case, as the jpa interface has been used, the database is subject to be changed by another one if needed.
 
 ## Licensing
 
-State what the license is and how to find the text version of the license.
+Free
