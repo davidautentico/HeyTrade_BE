@@ -4,7 +4,28 @@
 
 Small Pokedex Rest API
 
-## Installing / Getting started
+### Setting up Dev
+
+In order to be able to recreate the dev environment:
+
+```shell
+git clone https://github.com/davidautentico/HeyTrade_BE.git
+cd HeyTrade_BE/
+```
+Furthermore, the dev machine should have this libraries:
+
+- docker
+- java 17
+- maven 3.8
+
+### Built With
+- java 17
+- Maven 3.8
+- Spring Boot 2.7
+- TestContainers 1.17
+- Jpa
+
+## Installing / Building
 
 The project language is java +8-11.
 As a build framework, Maven has been chosen.
@@ -32,41 +53,6 @@ docker-compose down --rmi all -v --remove-orphans
 ```
 
 The command above cleans all containers, images, volumes, networks, and undefined containers created with docker-compose
-
-## Developing
-
-### Built With
-- java 17
-- Maven 3.8
-- Spring Boot 2.7
-- TestContainers 1.17
-- Jpa
-
-### Prerequisites
-What is needed to set up the dev environment. For instance, global dependencies or any other tools. include download links.
-
-
-### Setting up Dev
-
-In order to be able to recreate the dev environment:
-
-```shell
-git clone https://github.com/davidautentico/HeyTrade_BE.git
-cd HeyTrade_BE/
-```
-Furthermore, the dev machine should have this libraries:
-
-- docker
-- java 17
-- maven 3.8
-
-### Building
-
-The code below should build the project. This has to be executed in the root project path.
-
-```shell
-mvn clean package
-```
 
 ### Deploying / Publishing
 A dockerfile and a docker-compose files have been provided in order to deploy the project.

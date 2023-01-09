@@ -24,12 +24,10 @@ public interface PokemonRepository extends PagingAndSortingRepository<Pokemon, U
 
   Page<Pokemon> findByFavouriteTrue(Pageable pageable);
 
-  @Transactional
   @Modifying(flushAutomatically = true)
   @Query("UPDATE Pokemon SET favourite = true WHERE id = :pokemonId")
   int addFavouritePokemon(@Param("pokemonId") UUID pokemonId);
 
-  @Transactional
   @Modifying(flushAutomatically = true)
   @Query("UPDATE Pokemon SET favourite = false WHERE id = :pokemonId")
   int removeFavouritePokemon(@Param("pokemonId") UUID pokemonId);
