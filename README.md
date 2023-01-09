@@ -1,15 +1,14 @@
-<img src="./images/logo.sample.png" alt="Logo of the project" align="right">
 
-# HeyTrade BE &middot; [![Build Status](https://img.shields.io/travis/npm/npm/latest.svg?style=flat-square)](https://travis-ci.org/npm/npm) [![npm](https://img.shields.io/npm/v/npm.svg?style=flat-square)](https://www.npmjs.com/package/npm) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/your/your-project/blob/master/LICENSE)
-> Additional information or tag line
+
+# HeyTrade BE
 
 Small Pokedex Rest API
 
 ## Installing / Getting started
 
 The project language is java +8-11.
-Maven framework has been used in order to build it.
-A docker-compose file has been provided. That file contains two services:
+As a build framework, Maven has been chosen.
+Furthermore, a docker-compose file has been provided. That file contains two services:
 - MySql 5.7
 - Spring boot app
 
@@ -102,8 +101,81 @@ Explain your code style and show how to check it.
 
 ## Api Reference
 
-If the api is external, link to api documentation. If not describe your api including authentication methods as well as explaining all the endpoints with their required parameters.
+The interface provided by the service is a REST API. The operations are as follows.
 
+### GET /heytrade/api/v1/pokemons
+
+Return all pokemons.
+
+Responses:
+
+* **200 OK** When the service is ready to receive requests.
+
+### GET /heytrade/api/v1/pokemons/id
+
+Return a pokemon
+
+**Body** _required_ A url encoded form with the id as a UUID
+
+**Content Type** `application/x-www-form-urlencoded`
+
+Responses:
+
+* **200 OK** With the pokemon as the payload.
+* **404 Not Found** When the pokemon is not to be found.
+
+### GET /heytrade/api/v1/pokemons/search?favourite=_true_
+
+Return all favourite pokemons
+
+**Body** _required_ A url encoded form with the favourite equals to true
+
+**Content Type** `application/x-www-form-urlencoded`
+
+Responses:
+
+* **200 OK** With the list of pokemons as the payload.
+* **400 Bad Request** If all filters (favourite, pokemonType and text) are null
+
+### GET /heytrade/api/v1/pokemons/search?pokemonType=_type_
+
+Retrieve all pokemons that matches the pokemonType.
+
+Responses:
+
+* **200 OK** With the list of pokemons as the payload.
+* **400 Bad Request** If all filters (favourite, pokemonType and text) are null
+
+### GET /heytrade/api/v1/pokemons/search?text=_text_
+
+Retrieve all pokemons with a name that starts with text.
+
+Responses:
+
+* **200 OK** With the list of pokemons as the payload.
+* **400 Bad Request** If all filters (favourite, pokemonType and text) are null
+
+### PUT /heytrade/api/v1/pokemons/pokemon-favourites/{id}
+
+Add a pokemon, identified by its id, to the favourite collection.
+
+**Content Type** `application/x-www-form-urlencoded`
+
+Responses:
+
+* **200 OK** 
+* **404 Not Found** When the pokemon is not to be found.
+
+### DELETE /heytrade/api/v1/pokemons/pokemon-favourites/{id}
+
+Remove a pokemon, identified by its id, from the favourite collection.
+
+**Content Type** `application/x-www-form-urlencoded`
+
+Responses:
+
+* **200 OK**
+* **404 Not Found** When the pokemon is not to be found.
 
 ## Database
 
