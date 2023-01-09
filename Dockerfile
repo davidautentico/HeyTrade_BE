@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:17
 
 # The port your service will listen on
 EXPOSE 8080

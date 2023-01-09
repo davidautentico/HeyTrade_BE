@@ -9,7 +9,9 @@ import com.drosa.heytrade.domain.usecases.GetPokemonUseCase;
 import com.drosa.heytrade.domain.usecases.stereotypes.UseCase;
 import com.drosa.heytrade.infrastructure.configuration.CacheNames;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @UseCase
 public class GetPokemonUseCaseImpl implements GetPokemonUseCase {
 

@@ -9,7 +9,10 @@ import lombok.Data;
 @Builder
 @Data
 public class SearchRequestDTO implements Serializable {
+
   private String text;
+
   private PokemonType pokemonType;
+
   private Boolean favourite;
 }

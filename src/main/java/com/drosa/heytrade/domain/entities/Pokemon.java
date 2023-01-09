@@ -11,13 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -51,8 +48,8 @@ public class Pokemon {
   private PokemonCharacteristicsVO pokemonCharacteristicsVO;
 
   @OneToMany(cascade = CascadeType.ALL)
-  @JoinTable(name ="pokemon_evolution")
+  @JoinTable(name = "pokemon_evolution")
   private List<Pokemon> evolutions;
 
-  public Pokemon(){}
+  public Pokemon() {}
 }

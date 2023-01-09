@@ -43,7 +43,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
     webEnvironment = RANDOM_PORT,
     classes = TestApplication.class
 )
-public class PokemonApplicationTests {
+public class PokemonApplicationIntegrationTests {
 
   private static final String POKEMON_NAME_1 = "ABRA";
 
@@ -126,11 +126,11 @@ public class PokemonApplicationTests {
     // given
     pokemonRepository.deleteAll();
     var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.FALSE);
-    var savedPokemon1 = pokemonRepository.save(pokemon1);
+    pokemonRepository.save(pokemon1);
     var pokemon2 = getPokemon(POKEMON_NAME_2, POKEMON_NUMBER_2, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
-    var savedPokemon2 = pokemonRepository.save(pokemon2);
+    pokemonRepository.save(pokemon2);
     var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_3, null, Boolean.TRUE);
-    var savedPokemon3 = pokemonRepository.save(pokemon3);
+    pokemonRepository.save(pokemon3);
     var url = PokemonController.PATH + "/search?favourite=true";
 
     // call
@@ -140,7 +140,8 @@ public class PokemonApplicationTests {
     // verify
     Page<PokemonDetailsDTO> page = objectMapper.readValue(responseEntity.getBody(),
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
-        });
+        }
+    );
 
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(1);
@@ -173,9 +174,9 @@ public class PokemonApplicationTests {
     // given
     pokemonRepository.deleteAll();
     var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.TRUE);
-    var savedPokemon1 = pokemonRepository.save(pokemon1);
+    pokemonRepository.save(pokemon1);
     var pokemon2 = getPokemon(POKEMON_NAME_2, POKEMON_NUMBER_2, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
-    var savedPokemon2 = pokemonRepository.save(pokemon2);
+    pokemonRepository.save(pokemon2);
     var url = PokemonController.PATH + "/";
 
     // call
@@ -185,7 +186,8 @@ public class PokemonApplicationTests {
     // verify
     Page<PokemonDetailsDTO> page = objectMapper.readValue(responseEntity.getBody(),
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
-        });
+        }
+    );
 
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(2);
@@ -199,11 +201,11 @@ public class PokemonApplicationTests {
     // given
     pokemonRepository.deleteAll();
     var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.FALSE);
-    var savedPokemon1 = pokemonRepository.save(pokemon1);
+    pokemonRepository.save(pokemon1);
     var pokemon2 = getPokemon(POKEMON_NAME_2, POKEMON_NUMBER_2, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
-    var savedPokemon2 = pokemonRepository.save(pokemon2);
+    pokemonRepository.save(pokemon2);
     var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
-    var savedPokemon3 = pokemonRepository.save(pokemon2);
+    pokemonRepository.save(pokemon3);
     var url = PokemonController.PATH + "/search?text=" + POKEMON_NAME_2_SUFFIX_2;
 
     // call
@@ -213,7 +215,8 @@ public class PokemonApplicationTests {
     // verify
     Page<PokemonDetailsDTO> page = objectMapper.readValue(responseEntity.getBody(),
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
-        });
+        }
+    );
 
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(2);
@@ -227,11 +230,11 @@ public class PokemonApplicationTests {
     // given
     pokemonRepository.deleteAll();
     var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.FALSE);
-    var savedPokemon1 = pokemonRepository.save(pokemon1);
+    pokemonRepository.save(pokemon1);
     var pokemon2 = getPokemon(POKEMON_NAME_2, POKEMON_NUMBER_2, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
-    var savedPokemon2 = pokemonRepository.save(pokemon2);
+    pokemonRepository.save(pokemon2);
     var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
-    var savedPokemon3 = pokemonRepository.save(pokemon3);
+    pokemonRepository.save(pokemon3);
     var url = PokemonController.PATH + "/search?pokemonType=" + POKEMON_TYPE_1;
 
     // call
@@ -241,7 +244,8 @@ public class PokemonApplicationTests {
     // verify
     Page<PokemonDetailsDTO> page = objectMapper.readValue(responseEntity.getBody(),
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
-        });
+        }
+    );
 
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(1);
@@ -255,11 +259,11 @@ public class PokemonApplicationTests {
     // given
     pokemonRepository.deleteAll();
     var pokemon1 = getPokemon(POKEMON_NAME_1, POKEMON_NUMBER_1, POKEMON_TYPE_1, POKEMON_TYPE_2, Boolean.FALSE);
-    var savedPokemon1 = pokemonRepository.save(pokemon1);
+    pokemonRepository.save(pokemon1);
     var pokemon2 = getPokemon(POKEMON_NAME_2, POKEMON_NUMBER_2, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
-    var savedPokemon2 = pokemonRepository.save(pokemon2);
+    pokemonRepository.save(pokemon2);
     var pokemon3 = getPokemon(POKEMON_NAME_3, POKEMON_NUMBER_3, POKEMON_TYPE_2, POKEMON_TYPE_3, Boolean.FALSE);
-    var savedPokemon3 = pokemonRepository.save(pokemon3);
+    pokemonRepository.save(pokemon3);
     var url = PokemonController.PATH + "/search?text=" + POKEMON_NAME_1_SUFFIX_2 + "&pokemonType=" + POKEMON_TYPE_3;
 
     // call
@@ -269,7 +273,8 @@ public class PokemonApplicationTests {
     // verify
     Page<PokemonDetailsDTO> page = objectMapper.readValue(responseEntity.getBody(),
         new TypeReference<RestPageImpl<PokemonDetailsDTO>>() {
-        });
+        }
+    );
 
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(page.getTotalElements()).isEqualTo(1);
@@ -280,10 +285,14 @@ public class PokemonApplicationTests {
   @DisplayName("Call for a single pokemon with a wrong UUID it should return bad request")
   public void whenCallForNonUUIDPokemonId_shouldReturnBadRequest() {
 
+    // given
     var url = PokemonController.PATH + "/" + "1234-4567-2345-1234";
+
+    // call
     ResponseEntity<PokemonDetailsDTO> responseEntity =
         restTemplate.getForEntity(url, PokemonDetailsDTO.class);
 
+    // verify
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
@@ -291,10 +300,13 @@ public class PokemonApplicationTests {
   @DisplayName("Call for a single pokemon that not exists it should return not found")
   public void whenCallFoNonExistingPokemon_shouldReturnNotFound() {
 
+    // given
     var url = PokemonController.PATH + "/" + UUID.randomUUID();
 
+    // call
     ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 
+    // verify
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
@@ -302,10 +314,13 @@ public class PokemonApplicationTests {
   @DisplayName("Call for search using a wrong filter it should return bad request")
   public void whenCallFoNonExistingFilter_shouldReturnNotFound() {
 
+    // given
     var url = PokemonController.PATH + "/search?anothervariable=" + UUID.randomUUID();
 
+    // call
     ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 
+    // verify
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 

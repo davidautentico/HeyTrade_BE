@@ -41,8 +41,9 @@ public class PokemonDetailsDTO implements Serializable {
 
   private List<PokemonDetailsDTO> evolutions;
 
-  public PokemonDetailsDTO(UUID id, int number, String name, Boolean favourite, int combatPower, int hitPoints, String pokemonTypeLine, String weighRangeLine,
-      String heighRangeLine, List<PokemonDetailsDTO> evolutions){
+  public PokemonDetailsDTO(UUID id, int number, String name, Boolean favourite, int combatPower, int hitPoints, String pokemonTypeLine,
+      String weighRangeLine,
+      String heighRangeLine, List<PokemonDetailsDTO> evolutions) {
     this.id = id;
     this.number = number;
     this.name = name;
@@ -55,5 +56,6 @@ public class PokemonDetailsDTO implements Serializable {
     this.evolutions = evolutions;
   }
 
-  public PokemonDetailsDTO(){}
+  public PokemonDetailsDTO() {
+  }
 }

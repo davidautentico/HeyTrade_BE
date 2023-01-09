@@ -8,14 +8,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableCaching
-public class CachingConfig {
+public class AppConfiguration {
 
   @Bean
   public CacheManager cacheManager() {
     return new ConcurrentMapCacheManager(
         CacheNames.POKEMON_CACHE,
-        CacheNames.POKEMON_PAGEABLE_LIST_CACHE,
-        CacheNames.POKEMON_FAVOURITES_PAGEABLE_LIST_CACHE
+        CacheNames.POKEMON_PAGEABLE_LIST_CACHE
     );
   }
 }

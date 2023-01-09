@@ -1,6 +1,5 @@
 package com.drosa.heytrade.domain.usecases;
 
-import com.drosa.heytrade.api.rest.dtos.SearchRequestDTO;
 import com.drosa.heytrade.domain.entities.Pokemon;
 import com.drosa.heytrade.domain.enums.PokemonType;
 import org.springframework.data.domain.Page;

@@ -8,7 +8,9 @@ import com.drosa.heytrade.infrastructure.configuration.CacheNames;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @UseCase
 public class GetAllPokemonsUseCaseImpl implements GetAllPokemonsUseCase {
 
@@ -23,7 +25,7 @@ public class GetAllPokemonsUseCaseImpl implements GetAllPokemonsUseCase {
   @Cacheable(cacheNames = CacheNames.POKEMON_PAGEABLE_LIST_CACHE,
       key = "{#root.target.KEY, #page}"
   )
-  public Page<Pokemon> dispatch(final Pageable page){
+  public Page<Pokemon> dispatch(final Pageable page) {
     return pokemonRepository.findAll(page);
   }
 }

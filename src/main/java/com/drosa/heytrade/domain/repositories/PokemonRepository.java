@@ -18,8 +18,8 @@ public interface PokemonRepository extends PagingAndSortingRepository<Pokemon, U
 
   @Query(
       "SELECT p FROM Pokemon p WHERE (:favourite is NULL or favourite = :favourite) "
-      +" and (:text is NULL or UPPER(p.name) LIKE CONCAT(UPPER(:text),'%')) "
-      +" and (:pokemonType is NULL or (p.type1 = :pokemonType or p.type2 = :pokemonType))")
+          + " and (:text is NULL or UPPER(p.name) LIKE CONCAT(UPPER(:text),'%')) "
+          + " and (:pokemonType is NULL or (p.type1 = :pokemonType or p.type2 = :pokemonType))")
   Page<Pokemon> findByNameStartingWithAndTypeAndFavourite(String text, PokemonType pokemonType, Boolean favourite, Pageable pageable);
 
   Page<Pokemon> findByFavouriteTrue(Pageable pageable);

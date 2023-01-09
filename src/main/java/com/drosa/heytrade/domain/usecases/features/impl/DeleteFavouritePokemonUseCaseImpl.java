@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @UseCase
 public class DeleteFavouritePokemonUseCaseImpl implements DeleteFavouritePokemonUseCase {
 
@@ -22,15 +23,9 @@ public class DeleteFavouritePokemonUseCaseImpl implements DeleteFavouritePokemon
     this.pokemonRepository = pokemonRepository;
   }
 
-  @Transactional
   @Caching(
-      put = {
-          @CachePut(cacheNames = CacheNames.POKEMON_CACHE, key = "#pokemonId")
-      },
-      evict = {
-          @CacheEvict(value = CacheNames.POKEMON_PAGEABLE_LIST_CACHE, allEntries = true),
-          @CacheEvict(value = CacheNames.POKEMON_FAVOURITES_PAGEABLE_LIST_CACHE, allEntries = true)
-      }
+      put = {@CachePut(cacheNames = CacheNames.POKEMON_CACHE, key = "#pokemonId")},
+      evict = {@CacheEvict(value = CacheNames.POKEMON_PAGEABLE_LIST_CACHE, allEntries = true)}
   )
   public Pokemon dispatch(final UUID pokemonId) {
 
